@@ -54,12 +54,12 @@ export default store => next => action => {
 
  next(actionWith({type: requestType}));
 
- let accessToken;
-  if(store.getState().authentication.token) {
-    accessToken = store.getState().authentication.token;
-  } else if (callAPI.data && callAPI.data.token) {
-    accessToken = callAPI.data.token;
-  }
+ let accessToken = 'admin';
+  // if(store.getState().authentication.token) {
+  //   accessToken = store.getState().authentication.token;
+  // } else if (callAPI.data && callAPI.data.token) {
+  //   accessToken = callAPI.data.token;
+  // }
 
  return callApi(endpoint, schema, method, data, accessToken)
     .then(response => {
