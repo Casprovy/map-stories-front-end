@@ -20,6 +20,7 @@ class Viewer extends Component {
   }
 
   renderEvent = (event) => {
+    console.log('event', event)
     if(!event) return null;
     const { title, dateAndTime } = event;
     const styles = {
@@ -68,10 +69,13 @@ class Viewer extends Component {
 
   render() {
     const story = this.currentStory();
+    console.log(story);
     if (!story.events) return null;
     const event = story.events[this.state.currentEventIndex];
+    console.log(event);
     const markersProps = {};
-    if (event && event.coordinates && event.coordinates.length > 0) markersProps.markers = event.coordinates;
+    // && event.coordinates && event.coordinates.length > 0
+    if (event ) markersProps.markers = event.coordinates;
     else return null;
     return (
       <div className="Viewer">
