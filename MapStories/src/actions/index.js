@@ -106,7 +106,8 @@ export const updateStory = (storyId, data) => ({
     endpoint: `/stories/${storyId}`,
     schema: Schemas.STORY,
     data
-    }
+  }
+
 })
 
 export const STORIES_SEARCH_REQUEST = 'STORIES_SEARCH_REQUEST';

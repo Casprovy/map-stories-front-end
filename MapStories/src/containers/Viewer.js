@@ -74,9 +74,10 @@ class Viewer extends Component {
     const event = story.events[this.state.currentEventIndex];
     console.log(event);
     const markersProps = {};
-    // && event.coordinates && event.coordinates.length > 0
-    if (event ) markersProps.markers = event.coordinates;
+    //
+    if (event && event.location && event.location.lat ) markersProps.markers = [{lng:event.location.lng,lat:event.location.lat}];
     else return null;
+    console.log('a',markersProps);
     return (
       <div className="Viewer">
         <div className="MapViewer">
@@ -91,6 +92,7 @@ class Viewer extends Component {
         <TimeLine events={story.events} match={this.onTimelineChangeEvent} autoplay />
       </div>
     );
+
   }
 }
 

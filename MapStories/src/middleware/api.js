@@ -63,6 +63,7 @@ export default store => next => action => {
 
  return callApi(endpoint, schema, method, data, accessToken)
     .then(response => {
+      console.log('res',response)
       store.dispatch(actionWith({
         type: successType,
         response
