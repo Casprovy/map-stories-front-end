@@ -17,20 +17,35 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import LinearProgress from 'material-ui/LinearProgress';
 import AWS from 'aws-sdk';
+import S3Client from 'aws-s3';
+// import {uploadFile} from 'aws-s3';
 
 const albumBucketName = 'map-story';
-const bucketRegion = 'eu-west-1';
+const bucketRegion = 'eu-west-3';
 const IdentityPoolId = 'eu-west-1:888bfed2-3d00-4100-a4d9-8011c6df4837';
+const awsAccessKey = 'AKIAJL52JLSRVP23CF2A';
+const awsSecretKey = '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'
 
+
+// const config = {
+//   bucketName: albumBucketName,
+//   dirName: 'photos',
+//   region: 'eu-west-3',
+//   accessKeyId: 'ANEIFNENI4324N2NIEXAMPLE',
+//   secretAccessKey: 'cms21uMxçduyUxYjeg20+DEkgDxe6veFosBT7eUgEXAMPLE',
+// }
 AWS.config.update({
-  region: bucketRegion,
-  credentials: new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: IdentityPoolId
-  })
+  accessKeyId: awsAccessKey,
+  secretAccessKey: awsSecretKey
+  // region: bucketRegion,
+  // credentials: new AWS.CognitoIdentityCredentials({
+  //   IdentityPoolId: IdentityPoolId
+  // })
 });
+// AWS.config.setPromisesDependency(bluebird);
 
 const s3 = new AWS.S3({
-  apiVersion: '2006-03-01',
+  // apiVersion: '2006-03-01',
   params: {Bucket: albumBucketName}
 });
 
@@ -150,6 +165,10 @@ class EventInfo extends Component {
         progressTotal: progress.total
       })
     });
+    // S3Client
+    // .uploadFile(file, config)
+    // .then(data => console.log(data))
+    // .catch(err => console.error(err))
   }
 
   toggleDisable = (index) => {
