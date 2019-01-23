@@ -5,6 +5,7 @@ import '../css/LoginButton.css';
 class LoginButton extends Component {
 
   responseFacebook = (response) => {
+    console.log('fb response', response);
     this.props.handleLogin(response);
   }
 

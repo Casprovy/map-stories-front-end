@@ -22,32 +22,32 @@ import S3Client from 'aws-s3';
 
 const albumBucketName = 'map-story';
 const bucketRegion = 'eu-west-3';
-const IdentityPoolId = 'eu-west-1:888bfed2-3d00-4100-a4d9-8011c6df4837';
+const IdentityPoolId = 'eu-west-3:888bfed2-3d00-4100-a4d9-8011c6df4837';
 const awsAccessKey = 'AKIAJL52JLSRVP23CF2A';
-const awsSecretKey = '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'
+const awsSecretKey = 'sESwkDXflhsCzim+/0QuyLw8N0CclK/gsbT7vBlA';
+let baseUrl = 'https://map-story.s3.amazonaws.com/';
 
 
-// const config = {
-//   bucketName: albumBucketName,
-//   dirName: 'photos',
-//   region: 'eu-west-3',
-//   accessKeyId: 'ANEIFNENI4324N2NIEXAMPLE',
-//   secretAccessKey: 'cms21uMxçduyUxYjeg20+DEkgDxe6veFosBT7eUgEXAMPLE',
-// }
-AWS.config.update({
+const config = {
+  bucketName: albumBucketName,
+  region: 'eu-west-3',
   accessKeyId: awsAccessKey,
   secretAccessKey: awsSecretKey
-  // region: bucketRegion,
-  // credentials: new AWS.CognitoIdentityCredentials({
-  //   IdentityPoolId: IdentityPoolId
-  // })
-});
+}
+// AWS.config.update({
+//   accessKeyId: awsAccessKey,
+//   secretAccessKey: awsSecretKey
+//   // region: bucketRegion,
+//   // credentials: new AWS.CognitoIdentityCredentials({
+//   //   IdentityPoolId: IdentityPoolId
+//   // })
+// });
 // AWS.config.setPromisesDependency(bluebird);
 
-const s3 = new AWS.S3({
-  // apiVersion: '2006-03-01',
-  params: {Bucket: albumBucketName}
-});
+// const s3 = new AWS.S3({
+//   // apiVersion: '2006-03-01',
+//   params: {Bucket: albumBucketName}
+// });
 
 
 class EventInfo extends Component {
@@ -100,11 +100,14 @@ class EventInfo extends Component {
 
   changeAttachmentProperty = (index, key, value) => {
     const attachments = this.state.attachments.slice();
+    console.log('XXXXXX',attachments,index,key,value);
     attachments.splice(index, 1, {
       ...this.state.attachments[index],
       [key]: value,
     });
+    console.log('YYYY',attachments)
     this.setState({attachments});
+    console.log('STATE', this.state)
   }
 
   addAttachment = (url) => {
@@ -129,46 +132,62 @@ class EventInfo extends Component {
 
   handleAWSPath = (event, index, type) => {
     const files = event.target.files;
+    console.log('event',event,  files);
     if (!files.length) {
       return alert('Please choose a file to upload first.');
     }
     const file = files[0];
+    console.log('file', file)
     const fileNameComponents = file.name.split('.');
     const fileFormat = fileNameComponents[fileNameComponents.length-1];
     const fileName = uuid() + '.' + fileFormat;
     const albumFileKey = 'event-file/';
     const fileKey = albumFileKey + fileName;
-    s3.upload({
-      Key: fileKey,
-      Body: file,
-      ACL: 'public-read'
-    }, (err, data) => {
-      if (err) {
-        this.props.showError('There was an error uploading your file');
-        return;
-      }
-      this.setState({
-        uploadState: {
-          uploading: false,
-          index
-        }
-      });
-      this.changeAttachmentProperty(index, type === 'image' ? 'imageUrl' : 'url' , data.Location);
+    // s3.upload({
+    //   Key: fileKey,
+    //   Body: file,
+    //   ACL: 'public-read'
+    // }, (err, data) => {
+    //   if (err) {
+    //     this.props.showError('There was an error uploading your file');
+    //     return;
+    //   }
+    //   this.setState({
+    //     uploadState: {
+    //       uploading: false,
+    //       index
+    //     }
+    //   });
+    //   this.changeAttachmentProperty(index, type === 'image' ? 'imageUrl' : 'url' , data.Location);
+    // })
+    // .on('httpUploadProgress', (progress) => {
+    //   this.setState({
+    //     uploadState: {
+    //     uploading: true,
+    //     index
+    //     },
+    //     progressLoaded: progress.loaded,
+    //     progressTotal: progress.total
+    //   })
+    // });
+    S3Client
+    .uploadFile(file, config)
+    // .then('httpUploadProgress', (progress) => {
+    //   this.setState({
+    //     uploadState: {
+    //     uploading: true,
+    //     index
+    //     },
+    //     progressLoaded: progress.loaded,
+    //     progressTotal: progress.total
+    //   })
+    // })
+    .then(data => {
+      console.log(data,'DATA');
+      data.location = `${baseUrl}${data.key}`;
+      this.changeAttachmentProperty(index, type === 'image' ? 'imageUrl' : 'url' , data.location);
     })
-    .on('httpUploadProgress', (progress) => {
-      this.setState({
-        uploadState: {
-        uploading: true,
-        index
-        },
-        progressLoaded: progress.loaded,
-        progressTotal: progress.total
-      })
-    });
-    // S3Client
-    // .uploadFile(file, config)
-    // .then(data => console.log(data))
-    // .catch(err => console.error(err))
+    .catch(err => console.error(err))
   }
 
   toggleDisable = (index) => {
