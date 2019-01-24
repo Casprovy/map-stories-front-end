@@ -1,7 +1,7 @@
 import { normalize, schema } from 'normalizr';
 
 const callApi = (endpoint, schema, method='GET', body, accessToken) => {
-  const fullUrl = 'http://localhost:4000' + endpoint;
+  const fullUrl = 'http://192.168.1.206:4000' + endpoint;
 
  const headers = {}
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;

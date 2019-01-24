@@ -50,6 +50,7 @@ class Map extends Component {
     }
   }
 
+
   componentDidMount () {
 
     console.log(this.props, 'props in map')
@@ -65,7 +66,7 @@ class Map extends Component {
       container: 'map',
       style: 'mapbox://styles/mapbox/outdoors-v10',
       center,
-      zoom: 9
+      zoom: 6
     });
     this.map.doubleClickZoom.disable();
     this.map.on('load', (e) => {
