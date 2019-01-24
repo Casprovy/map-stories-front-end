@@ -1,7 +1,7 @@
 import { normalize, schema } from 'normalizr';
 
 const callApi = (endpoint, schema, method='GET', body, accessToken) => {
-  const fullUrl = 'http://localhost:4000' + endpoint;
+  const fullUrl = 'http://192.168.1.206:4000' + endpoint;
 
  const headers = {}
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
@@ -54,15 +54,16 @@ export default store => next => action => {
 
  next(actionWith({type: requestType}));
 
- let accessToken;
-  if(store.getState().authentication.token) {
-    accessToken = store.getState().authentication.token;
-  } else if (callAPI.data && callAPI.data.token) {
-    accessToken = callAPI.data.token;
-  }
+ let accessToken = 'admin';
+  // if(store.getState().authentication.token) {
+  //   accessToken = store.getState().authentication.token;
+  // } else if (callAPI.data && callAPI.data.token) {
+  //   accessToken = callAPI.data.token;
+  // }
 
  return callApi(endpoint, schema, method, data, accessToken)
     .then(response => {
+      console.log('res',response)
       store.dispatch(actionWith({
         type: successType,
         response

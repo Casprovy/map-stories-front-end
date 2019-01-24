@@ -8,6 +8,7 @@ class TimeLine extends Component {
 
   componentDidMount() {
     this.timeLine();
+
   }
 
   constructor(props) {
@@ -122,6 +123,7 @@ class TimeLine extends Component {
 
   forward = () => {
     const marks = Object.keys(this.state.calcMarks[0])
+    console.log('this', marks);
     const points = [];
     marks.forEach(x => {
       if (x > this.state.timeStamp + 1) {

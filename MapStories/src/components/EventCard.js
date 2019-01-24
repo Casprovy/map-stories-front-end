@@ -53,9 +53,10 @@ class EventCard extends Component {
     return <CardMedia key={i} expandable={false} children={children}></CardMedia>;
   }
 
-  renderImages = (attachment, i) => (
+  renderImages = (attachment, i) =>
+  (
     <CardMedia key={i} expandable={false}>
-      <img src={attachment.imageUrl} alt={i}/>
+      <img src={attachment.urlImg} alt={i}/>
     </CardMedia>
   )
 

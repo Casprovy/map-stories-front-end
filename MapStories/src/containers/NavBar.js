@@ -17,6 +17,7 @@ const _ = require('underscore');
 class NavBar extends Component {
 
  handleLogin = (response) => {
+  console.log('fb responseNAV', response)
     const userCredentials = {
       token: response.accessToken,
       email: response.email,

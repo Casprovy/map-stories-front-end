@@ -35,6 +35,8 @@ class Map extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    console.log(this.map,'map');
+
     if (
       this.map.getSource('markers')
       && nextProps.markers !== this.props.markers
@@ -48,7 +50,10 @@ class Map extends Component {
     }
   }
 
+
   componentDidMount () {
+
+    console.log(this.props, 'props in map')
     const center =
       this.props.markers
       && this.props.markers.length > 0
@@ -61,10 +66,11 @@ class Map extends Component {
       container: 'map',
       style: 'mapbox://styles/mapbox/outdoors-v10',
       center,
-      zoom: 9
+      zoom: 6
     });
     this.map.doubleClickZoom.disable();
     this.map.on('load', (e) => {
+      console.log(this.props.markers, 'markers');
       this.map.addSource('markers', {
         type: 'geojson',
         data: this.createGeoJson(this.props.markers)
@@ -79,6 +85,7 @@ class Map extends Component {
         source: 'markers',
       });
 
+
       if (this.props.editor) {
         this.mapExtras();
         this.map.on('click', (e) => {
@@ -86,8 +93,11 @@ class Map extends Component {
             lng: e.lngLat.lng,
             lat: e.lngLat.lat
           };
+          console.log(this.createGeoJson([point]),);
           this.map.getSource('markers').setData(this.createGeoJson([point]));
           this.props.onMarkerAdded(point);
+          console.log(this.props,'props');
+
         })
       } else this.map.getSource('markers').setData(this.createGeoJson(this.props.markers));
     });
